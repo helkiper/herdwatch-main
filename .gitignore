@@ -1,0 +1,4 @@
+services
+logs
+mysql
+!**/.gitkeep

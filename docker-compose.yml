@@ -1,0 +1,36 @@
+version: '2'
+
+services:
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./hosts/server.conf:/etc/nginx/conf.d/default.conf
+      - ./services/server:/var/www
+      - ./logs:/var/log/nginx
+    links:
+      - php-server
+
+  php-server:
+    build: ./images/php
+    links:
+      - mysql
+    volumes:
+      - ./services/server:/var/www
+
+  php-client:
+    build: ./images/php
+    volumes:
+      - ./services/client:/var/www
+
+  mysql:
+    image: mysql:8
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mysql:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: test_task
